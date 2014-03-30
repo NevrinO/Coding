@@ -21,12 +21,15 @@ namespace JTALesson1
     /// </summary>
     public partial class MainWindow : Window
     {
-        string dataSet = "cards.txt";
+        private string dataSet = "cards.txt", instructions, concepts, exercises;
+        private List<FlashCard> deck;
         public MainWindow()
         {
-            InitializeComponent();
-            // Start the program with question already showing
-            FlashCard randomVerb = GetFlashCard(); // Get our random verb
+            InitializeComponent(); // Start the program with question already showing
+            deck = loadFile();
+            Random randomNumber = new Random(); 
+            int x = randomNumber.Next(deck.Count); // Creates a random number
+            FlashCard randomVerb = deck[x]; // Get our random verb
             MeaningBlock.Text = randomVerb.Question; // Send our random verb meaning to textblock
             JVerbBlock.Text = randomVerb.Answer; // Set Japanese verb to a hidden block to pass data to buttoon
             int score = 0;
@@ -50,7 +53,9 @@ namespace JTALesson1
             {
                 OutcomeBlock.Text = "Wrong! The Answer Was: " + JVerbBlock.Text;
             }
-            FlashCard randomVerb = GetFlashCard();
+            Random randomNumber = new Random();
+            int x = randomNumber.Next(deck.Count); // Creates a random number
+            FlashCard randomVerb = deck[x]; // Get our random verb
             MeaningBlock.Text = randomVerb.Question;
             JVerbBlock.Text = randomVerb.Answer;
             AnswerBox.Clear();
@@ -60,16 +65,35 @@ namespace JTALesson1
                 "Congratulation!");
                 ScoreBlock.Text = "0";
             }
-
-            
+  
         }
 
-
-        private FlashCard GetFlashCard()
+        private List<FlashCard> loadFile()
         {
-            StreamReader sr = new StreamReader(dataSet); // Createe a new stream reader
+            StreamReader sr = new StreamReader(dataSet);
+            instructions = "";
+            concepts = "";
+            exercises = "";
             List<FlashCard> cards = new List<FlashCard>(); //Create an empty list of Type FlashCard called cards
             string str = sr.ReadLine();
+            while (str != "-end-")
+            {
+                instructions += str + "\n";
+                str = sr.ReadLine();
+            }
+            str = sr.ReadLine();
+            while (str != "-end-")
+            {
+                concepts += str + "\n";
+                str = sr.ReadLine();
+            }
+            str = sr.ReadLine();
+            while (str != "-end-")
+            {
+                exercises += str + "\n";
+                str = sr.ReadLine();
+            }
+            str = sr.ReadLine();
             while (str != null)
             {
                 FlashCard card = new FlashCard();  // create an empty Flashcard
@@ -80,38 +104,19 @@ namespace JTALesson1
                 str = sr.ReadLine();  // read the next line to see if there is more
             }
             sr.Close();  // we don't need the file open anymore
-            Random randomNumber = new Random(); 
-            int x = randomNumber.Next(cards.Count); // Creates a random number
-            return cards[x]; // Returns a random flashcard
+            return cards;
         }
-
 
 
         private void ShowWordsButton_Click(object sender, RoutedEventArgs e)
         {
-            // Same as GetFlashCard this creates a list of whats in our text file. This time
-            // however it is so we can show a list when clicking on the button.
-            StreamReader sr = new StreamReader(dataSet);
-            List<FlashCard> cards = new List<FlashCard>();
-            string str = sr.ReadLine();
-            while (str != null)
-            {
-                FlashCard card = new FlashCard();  // create an empty Flashcard
-                card.Question = str;  // set the Question to the first line read
-                str = sr.ReadLine();  // read another line
-                card.Answer = str;    // set the answer to the second line read
-                cards.Add(card);      // add this flashcard to our collection
-                str = sr.ReadLine();  // read the next line to see if there is more
-            }
-            sr.Close();  // we don't need the file open anymore
-
             StringBuilder builder = new StringBuilder(); // Create string builder
             int count = 0;
-            foreach (var word in cards) // Loop through all strings
+            foreach (var word in deck) // Loop through all strings
             {
                 // This creates a very long string of all words in cards.txt and links questions
                 // with answers and then puts each on a new line.
-                builder.Append(cards[count].Question + " - " + cards[count].Answer).Append("\n"); 
+                builder.Append(deck[count].Question + " - " + deck[count].Answer).Append("\n"); 
                 count++;
             }
             string result = builder.ToString(); // Get string from StringBuilder
@@ -141,47 +146,30 @@ namespace JTALesson1
 
         private void InstructionsButton_Click(object sender, RoutedEventArgs e) // Shows instructions popup
         {
-            MessageBox.Show("Instructions:"
-                + "\n\nWord Game:"
-                + "\n\nThe aim of the word game is to match each of the english meanings to the Japanese word."
-                + "\nYou can change the target score by changing the number at the top right of the screen and the targt score will be updated automatically."
-                + "\nYou can find the words that are used for the word game by clicking the 'Verbs' button."
-                + "\n\nConcepts:"
-                + "\n\nHere you will find concepts such as particles (words used to mark the subject of a word), past and future tense and other concepts used within the language."
-                + "\n\nExercises:"
-                + "\n\nThe idea behind this section is for you to grab a pen and paper and complete the included exercises such as translating a small sentance from English to Japanese."
-                +"",
-                "Instructions");
+            MessageBox.Show(instructions);
         }
 
         private void ConceptsButton_Click(object sender, RoutedEventArgs e) // Shows concepts pop up
         {
-            MessageBox.Show("Concepts:"
-                + "\n\nWa - 'About' Marker"
-                + "\nMarks the topic or subject of the sentence, as the word before it. Basically it describes what you are talking about."
-                + "\n\nKa - '?' Verbal question marker"
-                + "\nPlaced at the end of a sentence to indicate it is a quesiton"
-                + "\n\nDa - 'is' Marker"
-                + "\nPlaced at the end of a sentence to indicate what is being said 'is/am'"
-                + "",
-                "Concepts");
+            MessageBox.Show(concepts);
         }
 
         private void ExercisesButton_Click(object sender, RoutedEventArgs e) // Shows exercises popup
         {
-            MessageBox.Show("Exercises:"
-                + "\n\nFrom Japanese to English:"
-                + "\n\nOre wa Wakaru"
-                + "\nOre wa Shiru"
-                + "\nOmae wa iu"
-                + "\nShinobi wa wakaru ka"
-                + "\nSore wa sato da",
-                "Exercises");
+            MessageBox.Show(exercises);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             dataSet = DataSetBox.Text + ".txt";
+            deck = loadFile();
+            Random randomNumber = new Random();
+            int x = randomNumber.Next(deck.Count); // Creates a random number
+            FlashCard randomVerb = deck[x]; // Get our random verb
+            MeaningBlock.Text = randomVerb.Question; // Send our random verb meaning to textblock
+            JVerbBlock.Text = randomVerb.Answer; // Set Japanese verb to a hidden block to pass data to buttoon
+            int score = 0;
+            ScoreBlock.Text = score.ToString(); // Show score at 0 at start up
         }
     }
 
