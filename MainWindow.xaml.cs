@@ -26,7 +26,7 @@ namespace JTALesson1
         public MainWindow()
         {
             InitializeComponent(); // Start the program with question already showing
-            deck = loadFile();
+            deck = loadFile(); // runs function and saves the returned list as deck.
             Random randomNumber = new Random(); 
             int x = randomNumber.Next(deck.Count); // Creates a random number
             FlashCard randomVerb = deck[x]; // Get our random verb
@@ -71,29 +71,29 @@ namespace JTALesson1
         private List<FlashCard> loadFile()
         {
             StreamReader sr = new StreamReader(dataSet);
-            instructions = "";
-            concepts = "";
-            exercises = "";
+            instructions = ""; //Set variable to blank so when switching data sets it doesnt just add on to what was already there.
+            concepts = ""; // same as above, you should try and remove these 3 lines just to see.
+            exercises = ""; // same as above.
             List<FlashCard> cards = new List<FlashCard>(); //Create an empty list of Type FlashCard called cards
-            string str = sr.ReadLine();
-            while (str != "-end-")
+            string str = sr.ReadLine(); // reads in the next (or first in this case) line from the stream reader sr.
+            while (str != "-end-") //this while statement adds everything before the first '-end-' to the string instructions
             {
                 instructions += str + "\n";
                 str = sr.ReadLine();
             }
-            str = sr.ReadLine();
-            while (str != "-end-")
+            str = sr.ReadLine(); // this clears the '-end-' from str, without this it will skip the next while loop.
+            while (str != "-end-") // this loop adds everything between the first and second '-end-' to the concepts string.
             {
                 concepts += str + "\n";
                 str = sr.ReadLine();
             }
-            str = sr.ReadLine();
-            while (str != "-end-")
+            str = sr.ReadLine(); // this clears the '-end-' from str, without this it will skip the next while loop.
+            while (str != "-end-") // this loop adds everything between the second and last '-end-' to the exercises string.
             {
                 exercises += str + "\n";
                 str = sr.ReadLine();
             }
-            str = sr.ReadLine();
+            str = sr.ReadLine();// this clears the '-end-' from str, without this it will add '-end-' as the first question and all your questions and answers will be off.
             while (str != null)
             {
                 FlashCard card = new FlashCard();  // create an empty Flashcard
@@ -104,7 +104,7 @@ namespace JTALesson1
                 str = sr.ReadLine();  // read the next line to see if there is more
             }
             sr.Close();  // we don't need the file open anymore
-            return cards;
+            return cards; // returns the list cards.
         }
 
 
@@ -112,9 +112,9 @@ namespace JTALesson1
         {
             StringBuilder builder = new StringBuilder(); // Create string builder
             int count = 0;
-            foreach (var word in deck) // Loop through all strings
+            foreach (var word in deck) // Loop through all cards in deck
             {
-                // This creates a very long string of all words in cards.txt and links questions
+                // This creates a very long string of all words in list deck and links questions
                 // with answers and then puts each on a new line.
                 builder.Append(deck[count].Question + " - " + deck[count].Answer).Append("\n"); 
                 count++;
@@ -146,24 +146,24 @@ namespace JTALesson1
 
         private void InstructionsButton_Click(object sender, RoutedEventArgs e) // Shows instructions popup
         {
-            MessageBox.Show(instructions);
+            MessageBox.Show(instructions); // shows string.
         }
 
         private void ConceptsButton_Click(object sender, RoutedEventArgs e) // Shows concepts pop up
         {
-            MessageBox.Show(concepts);
+            MessageBox.Show(concepts); // shows string.
         }
 
         private void ExercisesButton_Click(object sender, RoutedEventArgs e) // Shows exercises popup
         {
-            MessageBox.Show(exercises);
+            MessageBox.Show(exercises); // shows string.
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             dataSet = DataSetBox.Text + ".txt";
-            deck = loadFile();
-            Random randomNumber = new Random();
+            deck = loadFile(); // runs function and saves the returned list as deck.
+            Random randomNumber = new Random(); // creates a new seed for rng.
             int x = randomNumber.Next(deck.Count); // Creates a random number
             FlashCard randomVerb = deck[x]; // Get our random verb
             MeaningBlock.Text = randomVerb.Question; // Send our random verb meaning to textblock
