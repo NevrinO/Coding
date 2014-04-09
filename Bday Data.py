@@ -2,30 +2,41 @@ import datetime
 
 print "Hello my closest, most dear and most revered friend"
 print "Please, if you would be so kind, enter your birthday"
-day = int(raw_input("enter day ")) # User input
-valid = False #used to insure integers are within proper range
-while not valid:
-	if day < 1 or day > 31:
-		print "You have entered an invalid answer"
-		day = int(raw_input("enter day ")) # retry input of valid integer
-	else:
-		valid = True
-month = int(raw_input("enter month "))
+valid = False #We start with no value for 'day' at all, so that's certainly not valid
+while not valid: #while we don't have a valid day:
+	try:
+		day = int(raw_input("enter the day: "))
+		if day < 1 or day > 31:
+			print "You have entered an invalid answer, please try again"
+		else:
+			valid = True
+	except:
+		print "You must enter an int"
+	
+ 
 valid = False # reset for next while loop
 while not valid:
-	if month < 1 or month > 12:
-		print "You have entered an invalid answer"
+	try:
 		month = int(raw_input("enter month ")) # retry input of valid integer
-	else:
-		valid = True
-year = int(raw_input("enter year "))
+		if month < 1 or month > 12:
+			print "You have entered an invalid answer"
+		else:
+			valid = True
+ 	except:
+		print "You must enter an int"
+		
+
 valid = False # reset for final while loop
 while not valid:
-	if year < 1000 or year > 2013:
-		print "You have entered an invalid answer"
+	try:
 		year = int(raw_input("enter year ")) # retry input of valid integer
-	else:
-		valid = True
+		if year < 1000 or year > 2013:
+			print "You have entered an invalid answer"
+		else:
+			valid = True
+	except:
+		print "You must enter an int"
+
 
 current = datetime.date.today() # gets current date from imported datetime 
 print ("\nYour Birthday is: %s/%s/%s" % (day, month, year)) # prints info user entered
@@ -57,5 +68,9 @@ if mDay < 0: # fix small discrepancy created with certain date combos
 print "You were born on a %s: " % (weekday[bDate.weekday()])
 print "you have been alive for about %s seconds" % (deltaDays.total_seconds())
 print ("\nYou are %s years %s months %s days old" % (mYear, mMonth, mDay))
+if mYear > 122:
+	print "You should call Guinness World Records cause it looks like you can give Jeanne Louise Calment a run for her money, She was born on 21 February 1875."
+	if year == 1875 and month == 02 and day == 21:
+		print "Oh never mind it looks like you are Jeanne Louise Calment."
 raw_input("hit enter to continue")
 
